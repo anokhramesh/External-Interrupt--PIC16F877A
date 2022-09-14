@@ -1,0 +1,54 @@
+  // External Interrupt in MicroC with PIC16F877 microcontroller
+
+unsigned int i;    // unsigned int global variable "i"
+
+void blink() // function for Blink Interrupt Indicatoer LED connected to PORTC RC2
+{
+for (i=0;i<5;i++)
+{
+PORTC.RC2=1;
+Delay_ms(50);
+PORTC.RC2=0;
+Delay_ms(50);
+}
+}
+void interrupt(void) //  Interrupt routine function
+{
+INTCON.GIE=0;   //   Disable  the global interrupt
+if(INTCON.INTF) // check condition if the External interrupt flag is available ?
+{
+//PORTB.RB2=0;
+blink(); //if available, call the blinking function of Interrupt LED
+}
+INTCON.INTF=0;  //clear the interrupt flag
+INTCON.GIE=1; // Enable again the globla interrupt for next interrupt to be occure
+}
+void main()  // main function
+{ 
+PORTC.RC2=0; // at initial set port C RC0 to Low
+TRISB=1; // set Port B as an Input
+TRISC=0; // set Port C as an Output
+ADCON0=0; // set all port are as Digital pins
+INTCON.GIE=1;   //Enable Global interrupt
+INTCON.INTE=1;  //Enable pin RB0 as External interrupt
+
+while(1) // infinite looop for running LED
+{
+PORTB.RB2=1;
+Delay_ms(50);
+PORTB.RB3=1;
+Delay_ms(50);
+PORTB.RB4=1;
+Delay_ms(50);
+PORTB.RB5=1;
+PORTB.RB2=0;
+Delay_ms(50);
+PORTB.RB3=0;
+Delay_ms(50);
+PORTB.RB4=0;
+Delay_ms(50);
+PORTB.RB5=0;
+Delay_ms(50);
+}
+}
+
